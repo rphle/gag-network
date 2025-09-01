@@ -1,19 +1,21 @@
-import pandas as pd
 import ast
-from typing import Literal, IO
-import itertools
-from bs4 import BeautifulSoup
-from multiprocessing import Pool
 import functools
-import requests
-from bz2 import BZ2Decompressor
-from werkzeug.datastructures import MultiDict
-import sqlite3
-from alive_progress import alive_bar
+import itertools
 import json
+import sqlite3
 import urllib.parse
-import xmltodict
+from bz2 import BZ2Decompressor
+from multiprocessing import Pool
+from typing import IO, Literal
+
 import numpy as np
+import pandas as pd
+import requests
+import xmltodict
+from alive_progress import alive_bar
+from bs4 import BeautifulSoup
+from werkzeug.datastructures import MultiDict
+
 import constants
 from scraping._Database import Database
 from scraping._Index import Index
@@ -36,7 +38,8 @@ def make_request(titles):
     """Make an API request to Wikipedia for language links."""
     return json.loads(
         requests.get(
-            f"https://de.wikipedia.org/w/api.php?action=query&prop=langlinks&titles={'|'.join(titles)}&lllang=en&formatversion=2&lllimit=max&format=json&redirects="
+            f"https://de.wikipedia.org/w/api.php?action=query&prop=langlinks&titles={'|'.join(titles)}&lllang=en&formatversion=2&lllimit=max&format=json&redirects=",
+            headers={"User-Agent": constants.USER_AGENT},
         ).text
     )["query"]
 
@@ -146,7 +149,7 @@ def scrape_articles(
     wikidump_en: IO = open(constants.WIKIDUMP_EN, "rb")
 
     # Scrape and process articles
-    with alive_bar(len(index["de"].index), title=f"refreshing articles") as bar:
+    with alive_bar(len(index["de"].index), title="refreshing articles") as bar:
         iterations = 0
         for id, row in index["de"].iterrows():
             row_en = index["en"].loc[
@@ -194,7 +197,7 @@ def scrape_articles(
 
             # Insert article data into the database
             db[0].execute(
-                f"INSERT INTO articles (key, title, title_en, id, episode, content, content_en, description, thumbnail) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
+                "INSERT INTO articles (key, title, title_en, id, episode, content, content_en, description, thumbnail) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)",
                 (
                     original_articles[row.title],
                     row.title,
@@ -207,7 +210,6 @@ def scrape_articles(
                     page["api"].get("originalimage", {}).get("source", ""),
                 ),
             )
-
 
             if iterations % 50 == 0:
                 db[1].commit()

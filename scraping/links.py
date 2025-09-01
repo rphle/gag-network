@@ -4,6 +4,7 @@ import sqlite3
 from alive_progress import alive_bar
 from scraping._Database import Database
 
+
 def scrape_links(con: sqlite3.Connection) -> pd.DataFrame:
     """
     Scrape links from article content and store them in the database.
@@ -48,7 +49,7 @@ def scrape_links(con: sqlite3.Connection) -> pd.DataFrame:
                         "lang": "de",
                     }
                 )
-            
+
             # Process English content if available
             if article["content_en"]:
                 parsed = wtp.parse(article["content_en"])
@@ -72,6 +73,7 @@ def scrape_links(con: sqlite3.Connection) -> pd.DataFrame:
     # Save links to the database
     df.to_sql("links", con=con, if_exists="replace", index=False)
     return df
+
 
 def refresh_links(*args) -> pd.DataFrame:
     """

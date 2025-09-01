@@ -1,8 +1,11 @@
-import pandas as pd
 import itertools
-import requests
 import json
+
+import pandas as pd
+import requests
 import wikitextparser as wtp
+
+import constants
 from scraping._Database import Database
 
 
@@ -23,6 +26,7 @@ def scrape_episodes() -> pd.DataFrame:
             "format": "json",
             "titles": "Geschichten_aus_der_Geschichte_(Podcast)/Episodenliste",
         },
+        headers={"User-Agent": constants.USER_AGENT},
     ).text
     text = wtp.parse(
         list(json.loads(response)["query"]["pages"].values())[0]["revisions"][0]["*"]

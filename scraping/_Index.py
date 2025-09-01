@@ -4,6 +4,7 @@ import sqlite3
 from alive_progress import alive_bar
 import os
 
+
 class Index(object):
     """
     A class to manage an index database for efficient data retrieval.
@@ -89,7 +90,7 @@ class Index(object):
             title (str): The title of the entry.
         """
         self.c.execute(
-            f"INSERT INTO pages (position, id, title) VALUES (?, ?, ?) ",
+            "INSERT INTO pages (position, id, title) VALUES (?, ?, ?) ",
             [position, id, title],
         )
 

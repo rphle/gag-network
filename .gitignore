@@ -1,5 +1,6 @@
 build/
-scraping/__pycache__
+__pycache__
+.ruff_cache
 set_env.sh
 build.sh
 build.zip

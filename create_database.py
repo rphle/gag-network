@@ -6,7 +6,7 @@ from scraping.links import refresh_links
 """
 Refresh the database.
 """
-    
+
 if __name__ == "__main__":
     args = sys.argv[1:]
     if len(args) == 0 or args == ["-u"]:
@@ -17,4 +17,8 @@ if __name__ == "__main__":
         options = ["--episodes", "--articles", "--links"]
         for option in options:
             if option in args:
-                {"--episodes": refresh_episodes, "--articles": refresh_articles, "--links": refresh_links}[option]("update" if "-u" in args else "refresh")
+                {
+                    "--episodes": refresh_episodes,
+                    "--articles": refresh_articles,
+                    "--links": refresh_links,
+                }[option]("update" if "-u" in args else "refresh")

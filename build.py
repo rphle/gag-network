@@ -5,22 +5,22 @@ This script creates nodes and edges of a network, pre-loads the network,
 and processes data from various sources including databases and web feeds.
 """
 
-import sys
-import re
-import json
 import ast
+import itertools
+import json
+import re
+import sys
 import urllib.request
 from multiprocessing import Pool
-import itertools
 
 import numpy as np
 import pandas as pd
 import podcastparser
-import wikitextparser as wtp
 import sentence_splitter
+import wikitextparser as wtp
+from alive_progress import alive_bar
 from selenium import webdriver
 from selenium.webdriver.support.ui import WebDriverWait
-from alive_progress import alive_bar
 
 from scraping._Database import Database
 
@@ -102,7 +102,16 @@ def get_dataframes():
     """
     Retrieves data from the database and processes it into various DataFrames and dictionaries.
     """
-    global links, all_links, titles, articles, episodes, categories, translations, plaintext, episode_covers
+    global \
+        links, \
+        all_links, \
+        titles, \
+        articles, \
+        episodes, \
+        categories, \
+        translations, \
+        plaintext, \
+        episode_covers
     db = Database()
     link_filter = """SELECT DISTINCT {} FROM links WHERE url IN (
         SELECT DISTINCT url FROM links
@@ -136,10 +145,9 @@ def get_dataframes():
         ),
     )
     episode_covers = {
-        ep["link"]
-        .removesuffix("/")
-        .split("/")[-1]: ep.get("episode_art_url", feed["cover_url"])
-        .split("=/")[-1]
+        ep["link"].removesuffix("/").split("/")[-1]: ep.get(
+            "episode_art_url", feed["cover_url"]
+        ).split("=/")[-1]
         for ep in feed["episodes"]
     }
     categories_df = pd.read_sql(
@@ -381,7 +389,20 @@ def refresh_data():
     """
     Refreshes all data by fetching from the database and processing it.
     """
-    global edges, nodes, categories, links, all_links, titles, articles, translations, episodes, edges, nodes, meta, plaintext
+    global \
+        edges, \
+        nodes, \
+        categories, \
+        links, \
+        all_links, \
+        titles, \
+        articles, \
+        translations, \
+        episodes, \
+        edges, \
+        nodes, \
+        meta, \
+        plaintext
     get_dataframes()
     edges = get_edges()
     nodes = get_nodes()
@@ -485,7 +506,8 @@ def create_save():
     driver = webdriver.Chrome(options=options)
     for size, name in {1000: "full", 80: "small"}.items():
         driver.get(
-           "file://" +  __file__.replace("build.py", f"frontend/_preload.html?exclude={size}")
+            "file://"
+            + __file__.replace("build.py", f"frontend/_preload.html?exclude={size}")
         )
         progress = [0]
         iterations = 3000

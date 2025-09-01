@@ -4,8 +4,9 @@ from datetime import datetime
 import sqlite3
 import constants
 
+
 class Database(object):
-    def __init__(self, path:str=constants.DATABASE) -> None:
+    def __init__(self, path: str = constants.DATABASE) -> None:
         """
         Initializes the Database object.
 
@@ -16,14 +17,20 @@ class Database(object):
         print(f"Connecting to database: {self.path}")
         self.conn: sqlite3.Connection = sqlite3.connect(self.path)
         self.c: sqlite3.Cursor = self.conn.cursor()
-        
+
     def backup(self) -> None:
         """
         Creates a backup of the database file.
         """
-        shutil.copy("data/articles.db", os.path.join("data/backup/", f"{datetime.now().strftime('%Y-%m-%d-%H_%M')}_articles_backup.db"))
+        shutil.copy(
+            "data/articles.db",
+            os.path.join(
+                "data/backup/",
+                f"{datetime.now().strftime('%Y-%m-%d-%H_%M')}_articles_backup.db",
+            ),
+        )
 
-    def drop(self, name:str=None):
+    def drop(self, name: str = None):
         """
         Drops specified table(s) from the database.
 

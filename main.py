@@ -1,16 +1,10 @@
 import sys
 import subprocess
 
-DATA_STEPS = [
-    "create_database.py",
-    "transform_icons.py",
-    "build.py --data"
-]
+DATA_STEPS = ["create_database.py", "transform_icons.py", "build.py --data"]
 
-PRELOAD_STEPS = [
-    "build.py --preload",
-    "cd frontend && npm run build && cd .."
-]
+PRELOAD_STEPS = ["build.py --preload", "cd frontend && npm run build && cd .."]
+
 
 def run_steps(steps):
     for step in steps:
@@ -22,6 +16,7 @@ def run_steps(steps):
         if result.returncode != 0:
             print(f"Error: '{step}' failed with return code {result.returncode}")
             sys.exit(1)
+
 
 if __name__ == "__main__":
     if len(sys.argv) > 1:

@@ -1,9 +1,13 @@
+import bz2
+import shutil
+
 import requests
 from bs4 import BeautifulSoup
-import shutil
-import bz2
 
-def get_dump_url(url:str="https://dumps.wikimedia.org", lang:str="dewiki", offset=0):
+
+def get_dump_url(
+    url: str = "https://dumps.wikimedia.org", lang: str = "dewiki", offset=0
+):
     """
     Retrieve the URLs for the latest Wikipedia dump files.
 
@@ -16,22 +20,31 @@ def get_dump_url(url:str="https://dumps.wikimedia.org", lang:str="dewiki", offse
         dict: URLs for the articles and index dump files.
     """
     # Get the directory page for the specified language
-    dir_page = requests.get(url+"/"+lang).text
-    soup = BeautifulSoup(dir_page, 'html.parser')
-    
+    dir_page = requests.get(url + "/" + lang).text
+    soup = BeautifulSoup(dir_page, "html.parser")
+
     # Find the desired dump date based on the offset
-    log_page = list(sorted([int(node.get("href").replace("/","")) for node in soup.find_all("a") if node.get("href").startswith("2")]))[-offset-1]
-    log_page: str = f'{url}/{lang}/{str(log_page)}'
+    log_page = list(
+        sorted(
+            [
+                int(node.get("href").replace("/", ""))
+                for node in soup.find_all("a")
+                if node.get("href").startswith("2")
+            ]
+        )
+    )[-offset - 1]
+    log_page: str = f"{url}/{lang}/{str(log_page)}"
 
     # Get the specific dump page
     log_page: str = requests.get(log_page).text
-    soup = BeautifulSoup(log_page, 'html.parser')
-    
+    soup = BeautifulSoup(log_page, "html.parser")
+
     # Extract URLs for articles and index dumps
     dumps = [url + a["href"] for a in soup.find("li", {"class": "done"}).find_all("a")]
     return {"articles": dumps[0], "index": dumps[1]}
 
-def download_index(url:str) -> str:
+
+def download_index(url: str) -> str:
     """
     Download and decompress the index file.
 
@@ -52,7 +65,8 @@ def download_index(url:str) -> str:
         f.write(decompressed)
     return decompressed
 
-def download_dump(url:str) -> str:
+
+def download_dump(url: str) -> str:
     """
     Download the articles dump file.
 
@@ -61,6 +75,7 @@ def download_dump(url:str) -> str:
     """
     print("downloading dump file from", url)
     download_file(url, "data/dump/articles.xml.bz2")
+
 
 def download_file(url, path=None):
     """
@@ -73,11 +88,12 @@ def download_file(url, path=None):
     Returns:
         str: Local filename of the downloaded file.
     """
-    local_filename = url.split('/')[-1] if not path else path
+    local_filename = url.split("/")[-1] if not path else path
     with requests.get(url, stream=True) as r:
-        with open(local_filename, 'wb') as f:
+        with open(local_filename, "wb") as f:
             shutil.copyfileobj(r.raw, f)
     return local_filename
+
 
 # Main execution
 url = get_dump_url(offset=1)  # Get URLs for the previous dump (offset=1)
