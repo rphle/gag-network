@@ -1,4 +1,4 @@
-![](https://raw.githubusercontent.com/Dr-Lego/gag-network/main/assets/banner.png)
+![](https://raw.githubusercontent.com/rphle/gag-network/main/assets/banner.png)
 
 # `Geschichten aus der Geschichte` Network Visualizer
 
@@ -23,9 +23,9 @@ Key features:
 - Data processing: `pandas` and `numpy`
 - Text parsing: `wikitextparser`
 - Multiprocessing
-- SQLite database 
+- SQLite database
 - SvelteKit as JavaScript frontend framework
-- Network visualization with `vis.js` 
+- Network visualization with `vis.js`
 
 ### Performance Optimization
 
@@ -54,9 +54,9 @@ You need to set several environment variables that define the user agent, databa
 GAG_USER_AGENT="GAG-Network (your-email@example.com)"
 GAG_DATABASE="/path/to/database"
 GAG_WIKIDUMP_DE="/path/to/german/wikipedia-dump.xml.bz2"
-GAG_WIKIDUMP_DE_INDEX="/path/to/german/wikipedia-dump-index.txt.bz2" 
+GAG_WIKIDUMP_DE_INDEX="/path/to/german/wikipedia-dump-index.txt.bz2"
 GAG_WIKIDUMP_EN="/path/to/english/wikipedia-dump.xml.bz2"
-GAG_WIKIDUMP_EN_INDEX="/path/to/english/wikipedia-dump-index.txt.bz2" 
+GAG_WIKIDUMP_EN_INDEX="/path/to/english/wikipedia-dump-index.txt.bz2"
 ```
 
 
@@ -123,4 +123,4 @@ After running `main.py`, you will have:
 - The `--preload` option is helpful when you've made changes to the visualization code but don't need to refresh the underlying data.
 
 After running the script, you can view the visualization by opening `build/index.html` in a web browser.
-An up-to-date build can also be found at [Dr-Lego/gag-network-build](https://github.com/Dr-Lego/gag-network-build).
+An up-to-date build can also be found at [rphle/gag-network-build](https://github.com/rphle/gag-network-build).
